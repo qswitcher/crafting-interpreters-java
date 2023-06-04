@@ -1,0 +1,9 @@
+var breakfast = "bagels";
+print breakfast; // "bagels".
+/*
+// Baz
+Foo
+var sausage /* Bar */
+*/
+breakfast = "beignets";
+print breakfast; // "beignets".
