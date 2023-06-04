@@ -1,0 +1,3 @@
+answer: use pattern matching, just add a new case for each new datatype. It's easy to add new functions
+, but hard to add new types. Modern functional languages can ensure that all patterns
+are handled

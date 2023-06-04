@@ -1,0 +1,33 @@
+expr → expr ( "(" ( expr ( "," expr )* )? ")" | "." IDENTIFIER )+
+     | IDENTIFIER
+     | NUMBER
+     
+     
+// my take on it
+
+expr -> expr path
+expr -> expr call
+expr -> IDENITIFER
+expr -> NUMBER
+
+path -> "." IDENTIFIER
+path -> path "." IDENTIFIER
+
+call -> list
+call -> call list
+
+args -> expr
+args -> expr "," args
+
+list -> "()"
+list -> "(" args ")"
+
+// answer
+this grammer encodes function calls and property access type code
+
+e.g.
+
+expr(arg1, arg2, ..)(b1, b2, ..)...
+expr.path1.path2
+
+This grammar also allows treating numbers as objects that can get called
