@@ -23,9 +23,38 @@ class Parser {
 	  }
 
 	private Expr expression() {
-		return equality();
+		return comma();
 	}
 
+	// Challenge 6.1
+	// to undo, just have expression() call equality instead of comma()
+	private Expr comma() {
+		Expr expr = tenary();
+		
+		while (match(COMMA)) {
+			Token operator = previous();
+			Expr right = tenary();
+			expr = new Expr.Binary(expr, operator, right);
+		}
+		
+		return expr;
+	}
+	
+	// Challenge 6.2
+	private Expr tenary() {
+		Expr expr = equality();
+		
+		while (match(QUESTION)) {
+			Expr exprIfTrue = equality();
+			while (match(COLON)) {
+				// need to recurse
+				Expr exprIfFalse = tenary();
+				expr = new Expr.Ternary(expr, exprIfTrue, exprIfFalse);
+			}
+		}
+		return expr;
+	}
+	
 	private Expr equality() {
 		Expr expr = comparison();
 
@@ -40,7 +69,7 @@ class Parser {
 
 	private Expr comparison() {
 		Expr expr = term();
-
+		
 		while (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
 			Token operator = previous();
 			Expr right = term();
@@ -52,7 +81,7 @@ class Parser {
 
 	private Expr term() {
 		Expr expr = factor();
-
+		
 		while (match(MINUS, PLUS)) {
 			Token operator = previous();
 			Expr right = factor();
@@ -99,6 +128,10 @@ class Parser {
 			return new Expr.Grouping(expr);
 		}
 		
+		// ch6.3 challenge
+		if (match(BANG_EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, MINUS, PLUS, SLASH, STAR)) {
+			throw error(peek(), "No left hand operand for " + previous().lexeme);
+		}
 	    throw error(peek(), "Expect expression.");
 	}
 

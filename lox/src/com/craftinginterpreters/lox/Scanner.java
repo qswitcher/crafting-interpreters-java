@@ -87,6 +87,14 @@ class Scanner {
 		case '*':
 			addToken(STAR);
 			break;
+		/* challenge 6.2 start */
+		case '?':
+			addToken(QUESTION);
+			break;
+		case ':':
+			addToken(COLON);
+			break;
+		/* challenge 6.2 end */
 		case '!':
 			addToken(match('=') ? BANG_EQUAL : BANG);
 			break;
@@ -100,7 +108,7 @@ class Scanner {
 			addToken(match('=') ? GREATER_EQUAL : GREATER);
 			break;
 		case '/':
-			// block comments /* ... */
+			/* challenge 5 block comments */
 			if (match('*')) {
 				// handle nested comments
 				int depth = 1;
