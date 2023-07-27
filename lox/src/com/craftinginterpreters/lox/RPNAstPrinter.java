@@ -1,6 +1,8 @@
 package com.craftinginterpreters.lox;
 
+import com.craftinginterpreters.lox.Expr.Assign;
 import com.craftinginterpreters.lox.Expr.Ternary;
+import com.craftinginterpreters.lox.Expr.Variable;
 
 class RPNAstPrinter implements Expr.Visitor<String> {
 	String print(Expr expr) {
@@ -62,5 +64,17 @@ class RPNAstPrinter implements Expr.Visitor<String> {
 		builder.append(name);
 
 		return builder.toString();
+	}
+
+	@Override
+	public String visitVariableExpr(Variable expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String visitAssignExpr(Assign expr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

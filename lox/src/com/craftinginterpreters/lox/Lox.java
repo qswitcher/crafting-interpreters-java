@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Lox {
@@ -26,7 +27,7 @@ public class Lox {
 
 	private static void runFile(String path) throws IOException {
 		byte[] bytes = Files.readAllBytes(Paths.get(path));
-		run(new String(bytes, Charset.defaultCharset()));
+		run(new String(bytes, Charset.defaultCharset()), false);
 
 		// Indicate an error in the exit code.
 		if (hadError)
@@ -45,24 +46,29 @@ public class Lox {
 			String line = reader.readLine();
 			if (line == null)
 				break;
-			run(line);
+			run(line, true);
 			hadError = false;
 		}
 	}
 
-	private static void run(String source) {
+	private static void run(String source, boolean print) {
 		Scanner scanner = new Scanner(source);
 		List<Token> tokens = scanner.scanTokens();
 
 		Parser parser = new Parser(tokens);
-		Expr expression = parser.parse();
+		List<Stmt> statements = parser.parse();
 
 		// Stop if there was a syntax error.
 		if (hadError)
 			return;
 
-		//System.out.println(new AstPrinter().print(expression));
-		interpreter.interpret(expression);
+		// Ch 8 challenge 1. Added "print" boolean flag to optionally print statmenet value
+		if (print && statements.get(0) instanceof Stmt.Expression) {
+			Stmt.Expression expr = (Stmt.Expression) statements.get(0);
+			interpreter.interpret(List.of(new Stmt.Print(expr.expression)));
+		} else {
+			interpreter.interpret(statements);
+		}
 	}
 
 	static void error(Token token, String message) {
