@@ -62,7 +62,15 @@ public class Lox {
 		if (hadError)
 			return;
 
-		// Ch 8 challenge 1. Added "print" boolean flag to optionally print statmenet value
+		Resolver resolver = new Resolver(interpreter);
+		resolver.resolve(statements);
+
+		// Stop if there was a resolution error.
+		if (hadError)
+			return;
+
+		// Ch 8 challenge 1. Added "print" boolean flag to optionally print statmenet
+		// value
 		if (print && statements.get(0) instanceof Stmt.Expression) {
 			Stmt.Expression expr = (Stmt.Expression) statements.get(0);
 			interpreter.interpret(List.of(new Stmt.Print(expr.expression)));
